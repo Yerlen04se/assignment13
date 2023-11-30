@@ -1,0 +1,32 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Carousel Component</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="app">
+  <carousel :items="carouselItems" :autoplay="true" :show-indicators="true"></carousel>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="carousel.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      carouselItems: [
+        { src: 'image1.jpg', alt: 'Image 1', caption: '' },
+        { src: 'image2.jpg', alt: 'Image 2', caption: '' },
+        // Add more carousel items as needed
+      ],
+    },
+  });
+</script>
+
+</body>
+</html>

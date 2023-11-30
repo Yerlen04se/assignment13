@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Timeline Component</title>
+  <style>
+    #timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  width: 60%;
+  max-width: 400px;
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.event:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event h3 {
+  margin-top: 0;
+  color: #3498db;
+  font-size: 1.5rem;
+}
+
+.event p {
+  margin: 10px 0;
+  color: #555;
+}
+
+.event button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.event button:hover {
+  background-color: #2980b9;
+}
+
+/* Add animation for events */
+.event-enter-active, .event-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+}
+.event-enter, .event-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* Add animation for sorting button */
+button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <timeline :events="events"></timeline>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script>
+  Vue.component('timeline', {
+    props: ['events'],
+    data() {
+      return {
+        sortedEvents: [...this.events],
+        ascending: true,
+      };
+    },
+    methods: {
+      sortEvents() {
+        this.ascending = !this.ascending;
+        this.sortedEvents = this.sortedEvents.sort((a, b) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return this.ascending ? dateA - dateB : dateB - dateA;
+        });
+      },
+      toggleDescription(index) {
+        this.$set(this.sortedEvents, index, {
+          ...this.sortedEvents[index],
+          showDescription: !this.sortedEvents[index].showDescription,
+        });
+      },
+    },
+    template: `
+      <div id="timeline">
+        <div class="event" v-for="(event, index) in sortedEvents" :key="index" @click="toggleDescription(index)">
+          <h3>{{ event.title }}</h3>
+          <p>{{ event.date }}</p>
+          <p v-if="event.showDescription">{{ event.description }}</p>
+        </div>
+        <button @click="sortEvents">Sort by Date</button>
+      </div>
+    `,
+  });
+
+  new Vue({
+    el: '#app',
+    data: {
+      events: [
+        { title: 'Event 1', date: '2023-01-01', description: 'Description for Event 1', showDescription: false },
+        { title: 'Event 2', date: '2023-03-15', description: 'Description for Event 2', showDescription: false },
+        { title: 'Event 3', date: '2023-05-20', description: 'Description for Event 3', showDescription: false },
+        // Add more events as needed
+      ],
+    },
+  });
+</script>
+
+</body>
+</html>
